@@ -1,7 +1,7 @@
 const cmd = require("./cmd")
 const pkg = require("../package.json")
 
-console.log("   /‾\\  /\\")
+console.log("   /‾\\  /‾\\")
 console.log("   | |  | |")
 console.log("   | |  | |");
 console.log("   \\_/  \\_/")

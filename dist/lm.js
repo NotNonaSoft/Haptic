@@ -1,6 +1,5 @@
 // LM.ts
 // Interaction with LM Studio and Ollama
-// (i secretely copied mindcraft's homework lmao)
 const lmconfig = require("../data/config.json");
 const http_er = require("../data/http-error-data.json");
 let lmlogs = require("../data/logs.json"); // fuck you typescript

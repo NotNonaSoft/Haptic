@@ -4,21 +4,22 @@ function log(message) {
 }
 
 function warn(message) {
-    console.log(`(⚠︎) ${message}`)
+    console.log('\x1b[33m%s\x1b[0m',`(⚠︎) ${message}`)
 }
 
 function err(message) {
-    console.log(`(X) ${message}`)
+    console.log('\x1b[31m%s\x1b[0m',`(X) ${message}`)
 }
 
 function debug(message) {
     if (require("../data/config.json").debug) {
-        console.log(`(🧑‍💻) ${message}`)
+        console.log('\x1b[34m%s\x1b[0m',`(🧑‍💻) ${message}`)
+
     }
 }
 
 function fatal(message) {
-    console.log(`(⛔︎) ${message}`)
+    console.log('\x1b[31m%s\x1b[0m',`(⛔︎) ${message}`)
     console.log(`Stopping DAIV Haptic.`)
     process.exit(1)
 }
