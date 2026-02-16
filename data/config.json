@@ -1,0 +1,14 @@
+{
+    "model": "google/gemma-2-9b",
+    "reasoning": false,
+    "api": "http://192.168.7.22:1234/api/v1",
+    "api-mode": "REST",
+    "port": 4275,
+    "contextLen": 8192,
+    "security": {
+        "allowFileAccess": false,
+        "allowSearchWeb": false,
+        "allowInstallWithoutApproval": false
+    },
+    "debug": true
+}

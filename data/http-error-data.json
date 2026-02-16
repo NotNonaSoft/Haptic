@@ -1,0 +1,13 @@
+{
+    "400": "A syntax error occured on Haptic's end. Please contact NonaSoft and report this as a bug, including this entire terminal log as PLAIN TEXT (he hates screenshots)",
+    "401": "The server has authentication enabled, and Haptic doesn't have permission to use it.",
+    "402": "Insert cash or select payment type. (Payment needed to proceed)",
+    "403": "The server apparently hates us for some reason",
+    "404": "The server couldn't find the requested model.",
+    "415": "A syntax error occured on Haptic's end. Please contact NonaSoft and report this as a bug, including this entire terminal log as PLAIN TEXT (he hates screenshots)",
+    "418": "The server is a teapot. That's all there is to say.",
+    "500": "Something went wrong on the server's end.",
+    "501": "The server doesn't seem to be capable of processing what we want. You're sure this is LM Studio, right?",
+    "502": "Couldn't connect to the server.",
+    "503": "The server is down, and can't handle our request."
+}

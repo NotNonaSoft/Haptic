@@ -1,0 +1,22 @@
+{
+    "name": "daiv-haptic",
+    "version": "0.1.0",
+    "license": "MIT",
+    "author": "NonaSoft",
+    "description": "An open-source AI agent made without the built-in security risks. Can (OR AT LEAST PLANNED TO) interact with APIs for services like X, Reddit, Moltbook",
+    "dependencies": {
+        "express": "^5.2.1",
+        "fs": "^0.0.1-security",
+        "os": "^0.1.2",
+        "path": "^0.12.7",
+        "typescript": "^5.9.3"
+    },
+    "scripts": {
+        "start": "tsc && node dist/index.js",
+        "init": "npm install & tsc & node dist/index.js",
+        "config": "tsc && node dist/config.ts"
+    },
+    "devDependencies": {
+        "@types/node": "^25.2.3"
+    }
+}
