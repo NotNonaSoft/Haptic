@@ -68,19 +68,22 @@ app.get("/api/chat", async (req, res) => {
   console.log("Got message:", msg)
 
   let aim: string = await ollama.askAiStream(`Message from user: ${msg}`,null,true,false,model)
-
-  while (JSON.parse(aim).command) {
-    // Using a command
-    const { commands, help } = require("./commands")
-    const command = JSON.parse(aim).command
-    if (command == "help") {
-      aim = await ollama.askAiStream(`Responding to command {help}: ${help()}`,null,true,false,model)
-    } else if (commands[command]) {
-      cmd.info("AI is using command " + command)
-      aim = await ollama.askAiStream(`Responding to command {${command}}: ${commands[command].execute(JSON.parse(aim).params || null)}`,null,true,false,model)
-    } else {
-      aim = await ollama.askAiStream(`Command not found: ${command}`,null,true,false,model)
+  try {
+    while (JSON.parse(aim).command) {
+      // Using a command
+      const { commands, help } = require("./commands")
+      const command = JSON.parse(aim).command
+      if (command == "help") {
+        aim = await ollama.askAiStream(`Responding to command {help}: ${help()}`,null,true,false,model)
+      } else if (commands[command]) {
+        cmd.info("AI is using command " + command)
+        aim = await ollama.askAiStream(`Responding to command {${command}}: ${commands[command].execute(JSON.parse(aim).params || null)}`,null,true,false,model)
+      } else {
+        aim = await ollama.askAiStream(`Command not found: ${command}`,null,true,false,model)
+      }
     }
+  }catch(error){
+    cmd.warn("Errored in command area. This is normal, means that they are sending a regular message. Just in case this is false, error is below:\n" + error)
   }
   res.send(aim)
 })
