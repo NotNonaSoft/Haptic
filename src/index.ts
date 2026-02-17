@@ -44,7 +44,7 @@ let model;
 async function load() {
     model = await ollama.getIdealModel()
     model = model.key
-    await ollama.systemPrompt("You are DAIV Haptic, an AI agent created by NonaSoft. You are made to handle everyday tasks and help your user (or 'human') at tasks like searching the web, compiling long documents, searching through the system for files, etc. You are built with security in mind, so not all of these features will be available unless the user says it is ok. A reminder that you are in Pre-ALPHA development, meaning lots of bugs will be present around your software. If any bugs do occur, you'll be notified and instructed to tell tell the user what failed. Also, avoid thinking for too long because otherwise some stuff might break. Do not use new line tags '\\n' otherwise they break the WebUI.", model)
+    await ollama.systemPrompt("You are DAIV Haptic, an AI agent created by NonaSoft. You are made to handle everyday tasks and help your user (or 'human') at tasks like searching the web, compiling long documents, searching through the system for files, etc. You are built with security in mind, so not all of these features will be available unless the user says it is ok. A reminder that you are in Pre-ALPHA development, meaning lots of bugs will be present around your software. If any bugs do occur, you'll be notified and instructed to tell tell the user what failed. Also, avoid thinking for too long because otherwise some stuff might break. Keep your message on one line..", model)
     await ollama.systemPrompt(`THE FOLLOWING ARE THE SETTINGS FOR YOU CONFIGURATION: ${JSON.stringify(config)}`, model)
     await ollama.systemPrompt(`You have the ability to use commands, if you want to use them, the syntax is {"command":"name of the command","params":{"any requires params go":"here"}}. Commands are referred in system instructions and commands via {command-name}. For a list of commands, use {help}.`, model)
     const cutoffDate = grabCutoff()
@@ -59,33 +59,48 @@ app.get(`/`, (req, res) => {
 })
 
 app.get("/api/chat", async (req, res) => {
-  res.setHeader("Content-Type", "text/event-stream")
   res.setHeader("Cache-Control", "no-cache")
   res.setHeader("Connection", "keep-alive")
+  res.setHeader("Content-Type", "object/event-stream")
   res.flushHeaders()
 
-  const msg: string = req.query.msg
-  console.log("Got message:", msg)
+  const msg = req.query.msg
+  cmd.log("Got message: " + msg)
 
-  let aim: string = await ollama.askAiStream(`Message from user: ${msg}`,null,true,false,model)
+  let commandsUsed = []
+  let aim = ""
+  await ollama.askAiStream(`Message from user: ${msg}`,async function(totalSoFar) {
+    aim = totalSoFar
+  },true,true,model)
+  res.write({
+    message: "Generating...",
+    commandsUsed
+  })
   try {
     while (JSON.parse(aim).command) {
-      // Using a command
       const { commands, help } = require("./commands")
       const command = JSON.parse(aim).command
       if (command == "help") {
-        aim = await ollama.askAiStream(`Responding to command {help}: ${help()}`,null,true,false,model)
+        aim = await ollama.askAiStream(`Responding to command {help}: ${help()}`,null,true,true,model)
       } else if (commands[command]) {
         cmd.info("AI is using command " + command)
-        aim = await ollama.askAiStream(`Responding to command {${command}}: ${commands[command].execute(JSON.parse(aim).params || null)}`,null,true,false,model)
+        aim = await ollama.askAiStream(`Responding to command {${command}}: ${commands[command].execute(JSON.parse(aim).params || null)}`,null,true,true,model)
       } else {
-        aim = await ollama.askAiStream(`Command not found: ${command}`,null,true,false,model)
+        aim = await ollama.askAiStream(`Command not found: ${command}`,null,true,true,model)
       }
+      commandsUsed.push(command)
+      res.write({
+        message: "Using commands...",
+        commandsUsed
+      })
     }
-  }catch(error){
-    cmd.warn("Errored in command area. This is normal, means that they are sending a regular message. Just in case this is false, error is below:\n" + error)
-  }
-  res.send(aim)
+  } catch {}
+  res.write({
+    message: aim,
+    commandsUsed
+  })
+  res.end()
+  cmd.log("Sent back: " + aim)
 })
 
 

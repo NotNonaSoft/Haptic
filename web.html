@@ -141,10 +141,17 @@
                 document.getElementById("usrinput").id = "msg" + count
                 document.getElementById("chat").insertAdjacentHTML('beforeend', generating + typeBox)
                 
-                const msg = fetch(`/api/chat?msg=${encodeURIComponent(input)}`)
-                document.getElementById("aimsg").textContent = e.data
+                const msg = await fetch(`/api/chat?msg=${encodeURIComponent(input)}`)
+                const response = await msg.json()
+                document.getElementById("aimsg").textContent = response
                 document.getElementById("aimsg").id = "aimsg" + count
                 count++
+                
+                document.getElementById("input").addEventListener("keypress", (event) => {
+                    if (event.key === "Enter") {
+                        sendMsg()
+                    }
+                })
             }
         </script>
     </body>
