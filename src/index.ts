@@ -58,7 +58,7 @@ app.get(`/`, (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'web.html'));
 })
 
-app.get("/api/chat/stream", async (req, res) => {
+app.get("/api/chat", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream")
   res.setHeader("Cache-Control", "no-cache")
   res.setHeader("Connection", "keep-alive")
@@ -76,6 +76,7 @@ app.get("/api/chat/stream", async (req, res) => {
     if (command == "help") {
       aim = await ollama.askAiStream(`Responding to command {help}: ${help()}`,null,true,false,model)
     } else if (commands[command]) {
+      cmd.info("AI is using command " + command)
       aim = await ollama.askAiStream(`Responding to command {${command}}: ${commands[command].execute(JSON.parse(aim).params || null)}`,null,true,false,model)
     } else {
       aim = await ollama.askAiStream(`Command not found: ${command}`,null,true,false,model)

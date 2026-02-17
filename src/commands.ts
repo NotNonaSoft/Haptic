@@ -1,5 +1,6 @@
 // COMMANDS.js
 // Defines the commands that the agent has access to.
+const cmd2 = require("./cmd") // fuck you typescript i want to declare the same variable
 
 let commands = {
     "exampleCommand": {
@@ -22,6 +23,7 @@ let commands = {
 }
 
 async function help() {
+    cmd2.log("Help command was run")
     let string = "Below is information about all available commands. Use {inspect} to find parameter information for a command, with the param commandName for the name of the command.\n"
     for (let command in commands) {
         string += `{${command}} : ${commands[command].description}`
